@@ -25,6 +25,11 @@ rm -rf *
 tar xvfz $TARFILE
 ln -s keycloak-$VERSION current
 sed -i 's/jboss.http.port:8080/jboss.http.port:8081/g'  current/standalone/configuration/standalone.xml
-sed -i 's/jboss.https.port:8443/jboss.https.port:8444/g'  current/standalone/configuration/standalone.xml
-
+sed -i 's/jboss.https.port:8443/jboss.https.port:15005/g'  current/standalone/configuration/standalone.xml
+current/bin/standalone.sh -Dkeycloak.migration.action=import -Dkeycloak.migration.provider=singleFile -Dkeycloak.migration.file=${DIR}/keycloak.export.json -Dkeycloak.migration.strategy=OVERWRITE_EXISTING&
+KCPID=$!
+sleep 60
+kill $KCPID 
+wait $KCPID
+sed -i 's/jboss.https.port:15005/jboss.https.port:5005/g'  current/standalone/configuration/standalone.xml
 cd $CURDIR
