@@ -1,5 +1,6 @@
 #!/bin/bash
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+DIR="$( cd "$(dirname "$0")" ; pwd -P )"
 VERSION=3.3.0.Final
 DISTDIR="$DIR/../pontus-dist/opt/pontus/pontus-keycloak";
 TARFILE=$DIR/distribution/server-dist/target/keycloak-${VERSION}.tar.gz
@@ -22,5 +23,7 @@ cd $DISTDIR
 rm -rf *
 tar xvfz $TARFILE
 ln -s keycloak-$VERSION current
+sed -i 's/jboss.http.port:8080/jboss.http.port:8081/g'  current/standalone/configuration/standalone.xml
+sed -i 's/jboss.https.port:8443/jboss.https.port:8444/g'  current/standalone/configuration/standalone.xml
 
 cd $CURDIR
